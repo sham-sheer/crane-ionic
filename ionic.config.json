@@ -1,0 +1,7 @@
+{
+  "name": "crane-ionic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
