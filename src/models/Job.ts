@@ -1,5 +1,10 @@
 export interface Job {
   id: number;
   title: string;
-  skills: string[];
+  company: string;
+  ratings: number;
+  minSalary: number;
+  maxSalary: number;
+  description: string;
+  url: string;
 }

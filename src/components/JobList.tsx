@@ -10,23 +10,24 @@ import {
   IonGrid,
   IonRow,
   IonCol,
+  IonSearchbar,
 } from "@ionic/react";
 import "./JobList.css";
 import JobItem from "./JobItem";
 import { Job } from "../models/Job";
 
+const JOB_URL_LOCAL = "http://localhost:3000/jobs/";
+
 const JobList: React.FC = () => {
-  const initialJobState = {
-    id: 2,
-    title: "example job",
-    skills: ["operation", "worker"],
-  };
   const [isLoaded, setIsLoaded] = React.useState(false);
-  const [jobs, setJobs] = React.useState<Job[]>([initialJobState]);
   const [error, setError] = React.useState("");
+  const [query, setQuery] = React.useState("");
+  const [jobs, setJobs] = React.useState<Job[]>([]);
 
   React.useEffect(() => {
-    fetch("https://api.example.com/items")
+    fetch(JOB_URL_LOCAL, {
+      mode: "cors",
+    })
       .then((res) => res.json())
       .then(
         (result) => {
@@ -40,22 +41,47 @@ const JobList: React.FC = () => {
       );
   }, []);
 
+  React.useEffect(() => {
+    const url = JOB_URL_LOCAL + query;
+    console.log(url);
+    fetch(url, {
+      mode: "cors",
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setJobs(result);
+        },
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      );
+  }, [query]);
+
   return (
-    <IonPage id="speaker-list">
+    <IonPage id="job-list">
       <IonHeader translucent={true}>
         <IonToolbar>
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonTitle>Speakers</IonTitle>
+          <IonTitle>Jobs</IonTitle>
         </IonToolbar>
       </IonHeader>
 
       <IonContent fullscreen={true}>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Speakers</IonTitle>
+            <IonTitle size="large">Jobs</IonTitle>
           </IonToolbar>
+          <IonSearchbar
+            animated={true}
+            placeholder={"Search"}
+            value={query}
+            onIonChange={(e) => setQuery(e.detail.value!)}
+          ></IonSearchbar>
         </IonHeader>
 
         <IonGrid fixed>
